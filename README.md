@@ -22,6 +22,14 @@ First add and commit your code to *your* branch:
 
 `git commit -m "message"`
 
+Then you move to the main branch by:
+
+`git checkout main`
+
+
+then merge our branch into main:
+
+`git merge *personal dev branch*`
 
 
 
