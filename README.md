@@ -26,10 +26,13 @@ Then you move to the main branch by:
 
 `git checkout main`
 
-
 then merge our branch into main:
 
-`git merge *personal dev branch*`
+`git merge [personal dev branch]`
+
+finally, push it to main:
+
+`git push -u origin main`
 
 
 
