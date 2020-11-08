@@ -5,7 +5,7 @@ E-com website with simple database
 
 ## How to use git
 
-
+**Commonly used commands:**
   * git status -v
   * git push -u origin [branch]
   * git checkout [branch]
