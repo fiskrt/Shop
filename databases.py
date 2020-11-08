@@ -70,7 +70,7 @@ def productCategoriesTable(self, cursor):
                                                         ); """
     cursor.execute(sql_create_table)
 
-def addToTable(tableName,):
+#def addToTable(tableName,):
 
 
 conn = sqlite3.connect('database.db')
