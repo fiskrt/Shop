@@ -1,11 +1,31 @@
-from flask import Flask, render_template
-import sqlite3
+from flask import Flask, render_template, request, redirect, url_for
+from forms import LoginForm
+
 
 app = Flask(__name__)
+app.config['SECRET_KEY']='DEV'
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def home():
-    return render_template("index.html", "xxx")
+    print(request.method)
+    form = LoginForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            return redirect(url_for('home'))
+    return render_template("index.html", data='test', form=form)
+
+@app.route("/about")
+def about():
+    return "Our incredible site!"
+
+@app.route('/login', methods=['POST'])
+def parse_request():
+
+    form = LoginForm()
+    if form.validate_on_submit():
+        return "validated"
+
+    return data
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
