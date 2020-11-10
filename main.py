@@ -11,21 +11,13 @@ def home():
     form = LoginForm()
     if request.method == 'POST':
         if form.validate_on_submit():
+            print(request.form)
             return redirect(url_for('home'))
     return render_template("index.html", data='test', form=form)
 
 @app.route("/about")
 def about():
     return "Our incredible site!"
-
-@app.route('/login', methods=['POST'])
-def parse_request():
-
-    form = LoginForm()
-    if form.validate_on_submit():
-        return "validated"
-
-    return data
 
 if __name__ == "__main__":
     app.run(debug=True)
