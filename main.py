@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, AdminAddProduct
 from product import Product
 
@@ -39,8 +39,6 @@ def admin():
             newProduct = Product()
 
     return render_template("AdminPage.html", form=form)
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
