@@ -2,29 +2,35 @@
 <html>
 <head>
     <title>Webshop - Admin</title>
-    <link rel="stylesheet" href="StyleSheet.css"></link>
-<link rel="AdminJS" href="adminJS.js"></link>
+    <link rel="stylesheet" href="../static/adminpage.css"></link>
 </head>
 <body>
-  <div class="category-group">
-   <button onclick="">Add To table</button>
-   <select name="tableADD" id="add">
-    <option value="product">Product</option>
-    <option value="customer">Customer</option>
-    <option value="review">Reviews</option>
-  </select>
-   <button onclick="">Remove from table</button>
-   <select name="tableREM" id="remove">
-    <option value="product">Product</option>
-    <option value="customer">Customer</option>
-    <option value="review">Reviews</option>
-  </select>
-   <button>category3</button>
+  <div class="AddProductForm" id="AddProduct">
+   <form method="post" action="" class="form-container">
+
+       {{ form.hidden_tag() }}
+
+       {{ form.productID.label}}
+	{{ form.productID(placeholder="Product ID")}}
+
+	{{ form.stock.label}}
+	{{ form.stock(placeholder="Enter Stock")}}
+
+       	{{ form.description.label}}
+	{{ form.description(placeholder="Enter Description")}}
+
+       	{{ form.image.label}}
+	{{ form.image(placeholder="Enter Stock")}}
+
+       {{ form.price.label}}
+	{{ form.price(placeholder="Enter Price")}}
+
+       	{{ form.brand.label}}
+	{{ form.brand(placeholder="Enter Brand")}}
+
+       {{ form.submit(class="btn") }}
+
+   </form>
  </div>
-<div class="productGrid">
-  <a>
-    <img src="./Images/PlaceHolder.png"></img>
-  </a>
-</div>
 </body>
 </html>
