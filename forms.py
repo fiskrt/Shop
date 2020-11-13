@@ -6,7 +6,7 @@ from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileF
 class LoginForm(FlaskForm):
     username = StringField('Username')
     password = PasswordField('Password')
-    submit = SubmitField('Sign up nibba')
+    submit = SubmitField('Log In')
 
 class AdminAddProduct(FlaskForm):
     productID = StringField('Product ID')
