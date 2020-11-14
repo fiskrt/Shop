@@ -1,16 +1,30 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, AdminAddProduct
 from product import Product
+from mysql.connector import errorcode
+from db_conn import Conn_db
 
 app = Flask(__name__)
 app.config['SECRET_KEY']='DEV'
 
-def is_logged_in():
-    users = ['filip', 'max']
-    for user in users:
-        if user in session:
-            return session[user]
+
+def user_exists(username):
+    with Conn_db() as conn:
+        query = """ SELECT name FROM User WHERE name=%s;"""
+        cursor = conn.cursor()
+        cursor.execute(query, (username,))
+        attr = cursor.fetchone() 
+        cursor.close()
+        if attr:
+            return True
     return False
+
+def is_logged_in():
+    try:
+        username = session['username']
+    except:
+        return False
+    return user_exists(username)
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -18,14 +32,13 @@ def home():
     if is_logged_in():
         return render_template("index.html", data='logged in', form=form)
 
-    print(request.method)
     if request.method == 'POST':
-        print('its a post!')
         if form.validate_on_submit():
-            session[form.username.data] = True 
+            session['username'] = form.username.data
             print(session)
             return redirect(url_for('home'))
     return render_template("index.html", data='logged out', form=form)
+
 
 @app.route("/about")
 def about():
@@ -41,4 +54,4 @@ def admin():
     return render_template("AdminPage.html", form=form)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
