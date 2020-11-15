@@ -24,5 +24,6 @@ class RegisterForm(FlaskForm):
         validators.EqualTo('confirm', "Message do not match")
     ])
     confirm = PasswordField('Confirm Password')
+    register = SubmitField('Register')
 
 

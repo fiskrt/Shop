@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="../static/adminpage.css"></link>
+</head>
+<body>
+  <div class="RegisterForm" id="RegisterForm">
+   <form method="post" action="" class="form-container">
+
+       {{ form.hidden_tag() }}
+
+       {{ form.name.label}}
+	{{ form.name(placeholder="Name")}}
+
+	{{ form.email.label}}
+	{{ form.email(placeholder="Email")}}
+
+       	{{ form.password.label}}
+	{{ form.password(placeholder="Password")}}
+
+    {{ form.confirmPassword.label}}
+	{{ form.confirmPassword(placeholder="Confirmed Password")}}
+
+       {{ form.register(class="btn") }}
+
+   </form>
+ </div>
+</body>
+</html>
