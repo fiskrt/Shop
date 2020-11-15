@@ -49,7 +49,7 @@ def home():
 def about():
     return "Our incredible site!"
 
-@app.route("/signup", methods=['GET', 'POST'])
+@app.route("/contact", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     if request.method == 'POST' and form.validate():
