@@ -8,23 +8,27 @@ app = Flask(__name__)
 app.config['SECRET_KEY']='DEV'
 
 
-def user_exists(username):
+def user_exists(username, check_admin=False):
     with Conn_db() as conn:
-        query = """ SELECT name FROM User WHERE name=%s;"""
+        if check_admin:
+            query = "SELECT name FROM Admin WHERE name=%s;"
+        else:
+            query = "SELECT name FROM User WHERE name=%s;"
         cursor = conn.cursor()
         cursor.execute(query, (username,))
         attr = cursor.fetchone() 
         cursor.close()
+        # attr is 'None' if no user was found
         if attr:
             return True
     return False
 
-def is_logged_in():
+def is_logged_in(check_admin=False):
     try:
         username = session['username']
     except:
         return False
-    return user_exists(username)
+    return user_exists(username, check_admin)
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -46,6 +50,8 @@ def about():
 
 @app.route("/admin", methods=['GET', 'POST'])
 def admin():
+    if not is_logged_in(check_admin=True):
+        return redirect(url_for('home'))
     form = AdminAddProduct()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -54,4 +60,5 @@ def admin():
     return render_template("AdminPage.html", form=form)
 
 if __name__ == "__main__":
+    Conn_db.load_conf()
     app.run(debug=False)

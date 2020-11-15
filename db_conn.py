@@ -1,18 +1,23 @@
 import mysql.connector
+import json
 
 
-class Conn_db():
-    
+class Conn_db:
+    """
+        Use this class for connecting to DB with
+        automatic close.
+    """
+    db_conf     = {}
     def __init__(self):
-        print("Opening DB connection!")
-        self.conn = mysql.connector.connect(user='filip', password='admin',
-                                    host='localhost',
-                                    database='mydb')
+        self.conn = mysql.connector.connect(**Conn_db.db_conf)
+
+    @staticmethod 
+    def load_conf():
+        with open('db_conf.json') as f:
+            Conn_db.db_conf = json.load(f) 
+
     def __enter__(self):
-        print("Giving DB connection!")
         return self.conn
     
-
     def __exit__(self, type, value, traceback):
-        print("Closing DB connection!")
         self.conn.close()
