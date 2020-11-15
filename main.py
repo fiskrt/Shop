@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from forms import LoginForm, AdminAddProduct
+from forms import LoginForm, AdminAddProduct,RegisterForm
 from product import Product
 from mysql.connector import errorcode
 from db_conn import Conn_db
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY']='DEV'
@@ -47,6 +48,18 @@ def home():
 @app.route("/about")
 def about():
     return "Our incredible site!"
+
+@app.route("/signup", methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if request.method == 'POST' and form.validate():
+        name = form.name.data
+        email = form.email.data
+        password = form.password.data
+        return render_template('register.html')
+    else:
+        return render_template('register.html', form=form)
+
 
 @app.route("/admin", methods=['GET', 'POST'])
 def admin():
