@@ -37,11 +37,10 @@ def home():
     if is_logged_in():
         return render_template("index.html", data='logged in', form=form)
 
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            session['username'] = form.username.data
-            print(session)
-            return redirect(url_for('home'))
+    if form.validate_on_submit():
+        session['username'] = form.username.data
+        print(session)
+        return redirect(url_for('home'))
     return render_template("index.html", data='logged out', form=form)
 
 
@@ -49,14 +48,15 @@ def home():
 def about():
     return "Our incredible site!"
 
-@app.route("/contact", methods=['GET', 'POST'])
+@app.route("/signup", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    if request.method == 'POST' and form.validate():
+    if form.validate_on_submit():
         name = form.name.data
         email = form.email.data
         password = form.password.data
-        return render_template('register.html')
+        return f'name: {name} email: {email} pass: {password}'
+        #return render_template('register.html')
     else:
         return render_template('register.html', form=form)
 
@@ -73,5 +73,6 @@ def admin():
     return render_template("AdminPage.html", form=form)
 
 if __name__ == "__main__":
+    # Load local db_conf.json file
     Conn_db.load_conf()
     app.run(debug=False)

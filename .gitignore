@@ -7,3 +7,4 @@
 __pycache__/
 static/boot/
 database/
+db_conf.json
