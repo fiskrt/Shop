@@ -24,11 +24,21 @@ def user_exists(username, check_admin=False):
             return True
     return False
 
+def add_user_db(username):
+    # Transaction????
+    if user_exists(username):
+        return False
+    with Conn_db() as conn:
+        #INSERT INTO... 
+        pass
+    return True
+
 def is_logged_in(check_admin=False):
     try:
         username = session['username']
     except:
         return False
+    check_admin = check_admin or 'admin' in session
     return user_exists(username, check_admin)
 
 @app.route("/", methods=['GET', 'POST'])
@@ -38,7 +48,11 @@ def home():
         return render_template("index.html", data='logged in', form=form)
 
     if form.validate_on_submit():
+        # Check if creds are valid.
         session['username'] = form.username.data
+        if form.username.data[0]=='#':
+            #admin
+            pass
         print(session)
         return redirect(url_for('home'))
     return render_template("index.html", data='logged out', form=form)
@@ -48,6 +62,7 @@ def home():
 def about():
     return "Our incredible site!"
 
+
 @app.route("/signup", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -55,8 +70,12 @@ def register():
         name = form.name.data
         email = form.email.data
         password = form.password.data
-        return f'name: {name} email: {email} pass: {password}'
-        #return render_template('register.html')
+        if add_user_db(name):
+            session['username'] = form.username.data # Log in user auto...
+            return redirect(url_for('home'))
+        else:
+            # Email already exists in DB!
+            return render_template('register.html', form=form)
     else:
         return render_template('register.html', form=form)
 
@@ -70,9 +89,9 @@ def admin():
         if form.validate_on_submit():
             newProduct = Product()
 
-    return render_template("AdminPage.html", form=form)
+    return render_template("adminpage.html", form=form)
 
 if __name__ == "__main__":
     # Load local db_conf.json file
     Conn_db.load_conf()
-    app.run(debug=False)
+    app.run(debug=True)

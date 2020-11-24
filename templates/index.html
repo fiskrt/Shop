@@ -1,92 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+<!-- inherit from base.html -->
 
-<head>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <title>Shop Homepage {{data}}</title>
-
-  <!-- Bootstrap core CSS -->
-  <link href="../static/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
-  <link href="../static/shop-homepage.css" rel="stylesheet">
-
-</head>
-
-<body>
-
-<div class="form-popup" id="myForm">
-  <form method="post" action="" class="form-container">
-	   {{ form.hidden_tag() }}
-    <h1>Login</h1>
-
-	<!--https://www.w3schools.com/howto/howto_js_popup_form.asp-->
-	{{ form.username.label}}
-	{{ form.username(placeholder="Enter Email")}}
-
-	{{ form.password.label}}
-	{{ form.password(placeholder="Enter Password")}}
-
-	
-	{{ form.submit(class="btn") }}
-
-	<!--
-    <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="Enter Email" name="email" required>
+{% block title %}
+Gang Gang
+{% endblock title %}
 
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
+{% block content %}
+    {% include 'login.html' %}
 
-	<button type="submit" class="btn">Login</button>
-	-->
-
-    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-  </form>
-</div>
-
-<script>
-function openForm() {
-  document.getElementById("myForm").style.display = "block";
-}
-
-function closeForm() {
-  document.getElementById("myForm").style.display = "none";
-}
-</script>
-
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="#">Webshop</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" onclick="openForm()" href="#">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/signup">Sign Up!</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
 
   <!-- Page Content -->
   <div class="container">
@@ -204,7 +126,7 @@ function closeForm() {
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
               <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
-              <div class="card-body">
+              <div class="card-body">emplate modular
                 <h4 class="card-title">
                   <a href="#">Item Five</a>
                 </h4>
@@ -253,10 +175,9 @@ function closeForm() {
     <!-- /.container -->
   </footer>
 
-  <!-- Bootstrap core JavaScript -->
+{% endblock content %}
+  <!-- Bootstrap core JavaScript
   <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
 
-</body>
 
-</html>

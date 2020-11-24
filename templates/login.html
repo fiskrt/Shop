@@ -1,0 +1,40 @@
+
+<div class="form-popup" id="myForm">
+  <form method="post" action="" class="form-container">
+	   {{ form.hidden_tag() }}
+    <h1>Login</h1>
+
+	<!--https://www.w3schools.com/howto/howto_js_popup_form.asp-->
+	{{ form.username.label}}
+	{{ form.username(placeholder="Enter Email")}}
+
+	{{ form.password.label}}
+	{{ form.password(placeholder="Enter Password")}}
+
+	
+	{{ form.submit(class="btn") }}
+
+	<!--
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email" required>
+
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" required>
+
+	<button type="submit" class="btn">Login</button>
+	-->
+
+    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+  </form>
+</div>
+
+<script>
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+</script>
