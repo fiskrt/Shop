@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Webshop - Admin</title>
+{% extends "base.html" %}
+
+{% block title %}
+Admino
+{% endblock title %}
+
+{% block custom_head %}
     <link rel="stylesheet" href="../static/adminpage.css"></link>
-</head>
-<body>
+{% endblock custom_head %}
+
+
+{% block content %}
   <div class="AddProductForm" id="AddProduct">
    <form method="post" action="" class="form-container">
 
@@ -32,5 +37,4 @@
 
    </form>
  </div>
-</body>
-</html>
+{% endblock content %}
