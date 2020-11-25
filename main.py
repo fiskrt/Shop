@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, make_response
 from forms import LoginForm, AdminAddProduct,RegisterForm
 from product import Product
 from mysql.connector import Error, errorcode
@@ -12,9 +12,9 @@ app.config['SECRET_KEY']='DEV'
 def user_exists(username, check_admin=False):
     with Conn_db() as conn:
         if check_admin:
-            query = "SELECT name FROM Admin WHERE name=%s;"
+            query = "SELECT username FROM Admin WHERE username=%s;"
         else:
-            query = "SELECT name FROM User WHERE name=%s;"
+            query = "SELECT username FROM User WHERE username=%s;"
         cursor = conn.cursor()
         cursor.execute(query, (username,))
         attr = cursor.fetchone() 
@@ -49,15 +49,34 @@ def add_user_db(username, password):
 
 
 def is_logged_in(check_admin=False):
+    """
+        If username start with a '#' then its
+        an admin account.
+    """
     try:
-        username = session['username']
+        #username = session['username']
+        username = request.cookies['username']
     except:
         return False
-    check_admin = check_admin or 'admin' in session
+    check_admin = check_admin or username[0] == '#'
+    if username[0] == '#':
+        username = username[1:]
     return user_exists(username, check_admin)
 
-def log_in(username, password):
-    pass
+
+def log_in(username, password, as_admin=False):
+    with Conn_db() as conn:
+        cursor = conn.cursor()
+        if as_admin:
+            lookup_query = 'SELECT username FROM Admin where username=%s and password=%s'
+        else:
+            lookup_query = 'SELECT username FROM User where username=%s and password=%s'
+        cursor.execute(lookup_query, (username, password)) 
+
+        if cursor.fetchone():
+            return True
+    return False
+    
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -66,14 +85,16 @@ def home():
         return render_template("index.html", data='logged in', form=form)
 
     if form.validate_on_submit():
-        # Check if creds are valid.
-        if 
-        session['username'] = form.username.data
-        if form.username.data[0]=='#':
-            #admin
-            pass
-        print(session)
-        return redirect(url_for('home'))
+        username = form.username.data
+        password = form.password.data
+        response = make_response(redirect(url_for('home')))
+        if username[0]=='#':
+            if log_in(username[1:], password, as_admin=True):
+                response.set_cookie('admin', username)
+                response.set_cookie('username', username)
+        elif log_in(username, password): 
+            response.set_cookie('username', username)
+        return response
     return render_template("index.html", data='logged out', form=form)
 
 
@@ -90,7 +111,7 @@ def register():
         email = form.email.data
         password = form.password.data
         if add_user_db(name, password):
-            session['username'] = name # Log in user auto...
+            #session['username'] = name # Log in user auto...
             return redirect(url_for('home'))
         else:
             # Email already exists in DB!
@@ -101,8 +122,8 @@ def register():
 
 @app.route("/admin", methods=['GET', 'POST'])
 def admin():
-    #if not is_logged_in(check_admin=True):
-    #    return redirect(url_for('home'))
+    if not is_logged_in(check_admin=True):
+        return redirect(url_for('home'))
     form = AdminAddProduct()
     if request.method == 'POST':
         if form.validate_on_submit():
