@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from forms import LoginForm, AdminAddProduct,RegisterForm
 from product import Product
-from mysql.connector import errorcode
+from mysql.connector import Error, errorcode
 from db_conn import Conn_db
 
 
@@ -24,14 +24,29 @@ def user_exists(username, check_admin=False):
             return True
     return False
 
-def add_user_db(username):
-    # Transaction????
-    if user_exists(username):
-        return False
+
+def add_user_db(username, password):
+    """
+        Add a user to the 'User' table.
+        If user already exists return False.
+    """
     with Conn_db() as conn:
-        #INSERT INTO... 
-        pass
+        conn.autocommit = False
+        cursor = conn.cursor()
+        lookup_query = 'SELECT username FROM User where username=%s'
+        cursor.execute(lookup_query, (username,)) 
+
+        if cursor.fetchone():
+            conn.rollback() # Unsure about this rollback
+            cursor.close()
+            return False # User already exists.
+
+        insert_query = 'INSERT INTO User(username, password) VALUES(%s, %s)'       
+        cursor.execute(insert_query, (username, password))
+        conn.commit()
+        cursor.close()
     return True
+
 
 def is_logged_in(check_admin=False):
     try:
@@ -41,6 +56,9 @@ def is_logged_in(check_admin=False):
     check_admin = check_admin or 'admin' in session
     return user_exists(username, check_admin)
 
+def log_in(username, password):
+    pass
+
 @app.route("/", methods=['GET', 'POST'])
 def home():
     form = LoginForm()
@@ -49,6 +67,7 @@ def home():
 
     if form.validate_on_submit():
         # Check if creds are valid.
+        if 
         session['username'] = form.username.data
         if form.username.data[0]=='#':
             #admin
@@ -70,8 +89,8 @@ def register():
         name = form.name.data
         email = form.email.data
         password = form.password.data
-        if add_user_db(name):
-            session['username'] = form.username.data # Log in user auto...
+        if add_user_db(name, password):
+            session['username'] = name # Log in user auto...
             return redirect(url_for('home'))
         else:
             # Email already exists in DB!
@@ -82,8 +101,8 @@ def register():
 
 @app.route("/admin", methods=['GET', 'POST'])
 def admin():
-    if not is_logged_in(check_admin=True):
-        return redirect(url_for('home'))
+    #if not is_logged_in(check_admin=True):
+    #    return redirect(url_for('home'))
     form = AdminAddProduct()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -94,4 +113,4 @@ def admin():
 if __name__ == "__main__":
     # Load local db_conf.json file
     Conn_db.load_conf()
-    app.run(debug=True)
+    app.run(debug=False)
