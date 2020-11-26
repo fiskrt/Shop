@@ -17,7 +17,7 @@ def user_exists(username, check_admin=False):
             query = "SELECT username FROM User WHERE username=%s;"
         cursor = conn.cursor()
         cursor.execute(query, (username,))
-        attr = cursor.fetchone() 
+        attr = cursor.fetchall() 
         cursor.close()
         # attr is 'None' if no user was found
         if attr:
@@ -54,8 +54,7 @@ def is_logged_in(check_admin=False):
         an admin account.
     """
     try:
-        #username = session['username']
-        username = request.cookies['username']
+        username = session['username']
     except:
         return False
     check_admin = check_admin or username[0] == '#'
@@ -82,19 +81,20 @@ def log_in(username, password, as_admin=False):
 def home():
     form = LoginForm()
     if is_logged_in():
-        return render_template("index.html", data='logged in', form=form)
+        data=f'logged in as {session["username"]}'
+        return render_template("index.html", logged_in=True, data=data, form=form)
 
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        response = make_response(redirect(url_for('home')))
+        response = make_response()
         if username[0]=='#':
             if log_in(username[1:], password, as_admin=True):
-                response.set_cookie('admin', username)
-                response.set_cookie('username', username)
+                session['admin'] = username
+                session['username'] = username
         elif log_in(username, password): 
-            response.set_cookie('username', username)
-        return response
+            session['username'] = username
+        return redirect(url_for('home'))  
     return render_template("index.html", data='logged out', form=form)
 
 
@@ -102,6 +102,18 @@ def home():
 def about():
     return "Our incredible site!"
 
+@app.route("/logout")
+def logout():
+    """
+        Use post req instead?
+        THIS DOES NOT PREVENT COOKIE REPLAY ATTACKS
+    """ 
+    if is_logged_in():
+        del session['username']
+        if 'admin' in session:
+            del session['admin']
+
+    return redirect(url_for('home')) 
 
 @app.route("/signup", methods=['GET', 'POST'])
 def register():
