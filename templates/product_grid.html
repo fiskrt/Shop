@@ -14,7 +14,10 @@
                     </p>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                    <small class="text-muted">
+                    {% for _ in range(3) %} &#9733; {% endfor %}
+                    {% for _ in range(2) %} &#9734; {% endfor %}
+                    </small>
                 </div>
             </div>
         </div>
