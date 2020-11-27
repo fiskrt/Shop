@@ -20,4 +20,5 @@ class Conn_db:
         return self.conn
     
     def __exit__(self, type, value, traceback):
+        # TODO: How are exceptions handled?
         self.conn.close()
