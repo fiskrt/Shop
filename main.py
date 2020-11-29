@@ -17,7 +17,7 @@ def user_exists(username, check_admin=False):
             query = "SELECT username FROM User WHERE username=%s;"
         cursor = conn.cursor()
         cursor.execute(query, (username,))
-        attr = cursor.fetchall() 
+        attr = cursor.fetchall()
         cursor.close()
         # attr is 'None' if no user was found
         if attr:
@@ -34,14 +34,14 @@ def add_user_db(username, password):
         conn.autocommit = False
         cursor = conn.cursor()
         lookup_query = 'SELECT username FROM User where username=%s'
-        cursor.execute(lookup_query, (username,)) 
+        cursor.execute(lookup_query, (username,))
 
         if cursor.fetchone():
             conn.rollback() # Unsure about this rollback
             cursor.close()
             return False # User already exists.
 
-        insert_query = 'INSERT INTO User(username, password) VALUES(%s, %s)'       
+        insert_query = 'INSERT INTO User(username, password) VALUES(%s, %s)'
         cursor.execute(insert_query, (username, password))
         conn.commit()
         cursor.close()
@@ -72,12 +72,22 @@ def log_in(username, password, as_admin=False):
             lookup_query = 'SELECT username FROM Admin where username=%s and password=%s'
         else:
             lookup_query = 'SELECT username FROM User where username=%s and password=%s'
-        cursor.execute(lookup_query, (username, password)) 
+        cursor.execute(lookup_query, (username, password))
 
         if cursor.fetchone():
             return True
     return False
-    
+
+def addProduct(pid, stock, description, price, brand):
+    print("AAAAAH")
+    with Conn_db() as conn:
+        print("lmao")
+        cursor = conn.cursor()
+        query = "INSERT INTO product(idproduct, price, stock, description, brand) VALUES(%s,%s,%s,%s,%s);"
+        cursor.execute(query, (pid, price, stock, description, brand))
+        attr = cursor.fetchone()
+        cursor.close()
+    return True
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -97,9 +107,9 @@ def home():
             if log_in(username[1:], password, as_admin=True):
                 session['admin'] = username
                 session['username'] = username
-        elif log_in(username, password): 
+        elif log_in(username, password):
             session['username'] = username
-        return redirect(url_for('home'))  
+        return redirect(url_for('home'))
     return render_template("index.html", data='logged out', form=form)
 
 
@@ -118,7 +128,7 @@ def logout():
         if 'admin' in session:
             del session['admin']
 
-    return redirect(url_for('home')) 
+    return redirect(url_for('home'))
 
 @app.route("/signup", methods=['GET', 'POST'])
 def register():
@@ -137,14 +147,19 @@ def register():
         return render_template('register.html', form=form)
 
 
-@app.route("/admin", methods=['GET', 'POST'])
+@app.route("/adminpage", methods=['GET', 'POST'])
 def admin():
-    if not is_logged_in(check_admin=True):
-        return redirect(url_for('home'))
+    #if not is_logged_in(check_admin=True):
+    #    return redirect(url_for('home'))
     form = AdminAddProduct()
     if request.method == 'POST':
         if form.validate_on_submit():
-            newProduct = Product()
+            pid = form.productID.data
+            stock = form.stock.data
+            description = form.description.data
+            price = form.price.data
+            brand = form.brand.data
+            addProduct(pid, stock, description, price, brand)
 
     return render_template("adminpage.html", form=form)
 
