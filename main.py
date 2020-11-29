@@ -52,6 +52,8 @@ def is_logged_in(check_admin=False):
     """
         If username start with a '#' then its
         an admin account.
+        
+        TODO: Return relevant session data? such as if admin etc
     """
     try:
         username = session['username']
@@ -82,7 +84,10 @@ def home():
     form = LoginForm()
     if is_logged_in():
         data=f'logged in as {session["username"]}'
-        return render_template("index.html", logged_in=True, data=data, form=form)
+        if 'admin' in session:
+            return render_template("index.html", logged_in=True,admin=True, data=data, form=form)
+        else:
+            return render_template("index.html", logged_in=True, data=data, form=form)
 
     if form.validate_on_submit():
         username = form.username.data
@@ -106,7 +111,7 @@ def about():
 def logout():
     """
         Use post req instead?
-        THIS DOES NOT PREVENT COOKIE REPLAY ATTACKS
+        THIS DOES NOT PREVENT REPLAYING THE COOKIE
     """ 
     if is_logged_in():
         del session['username']
@@ -146,4 +151,4 @@ def admin():
 if __name__ == "__main__":
     # Load local db_conf.json file
     Conn_db.load_conf()
-    app.run(debug=False)
+    app.run(debug=True)
