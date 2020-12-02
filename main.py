@@ -119,8 +119,9 @@ def about():
     return product()
     #return "Our incredible site!"
 
-@app.route("/product/<productName>")
-def product(productName):
+@app.route("/product/<productId>")
+def product(productId):
+    lookup_query = 'SELECT picture FROM Product where idProduct=productId'
     return render_template('product.html', productName = "hej", description = "Det här är en tomat")
 
 @app.route("/logout")
@@ -171,5 +172,5 @@ def admin():
 
 if __name__ == "__main__":
     # Load local db_conf.json file
-    #Conn_db.load_conf()
+    Conn_db.load_conf()
     app.run(debug=True)

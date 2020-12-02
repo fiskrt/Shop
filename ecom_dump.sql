@@ -109,6 +109,7 @@ CREATE TABLE `Product` (
   `price` decimal(10,2) DEFAULT NULL,
   `description` mediumtext,
   `Brand` varchar(45) DEFAULT NULL,
+  `picture` BLOB,
   PRIMARY KEY (`idProduct`),
   UNIQUE KEY `name_UNIQUE` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
