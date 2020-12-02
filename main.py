@@ -119,9 +119,9 @@ def about():
     return product()
     #return "Our incredible site!"
 
-@app.route("/product")
-def product():
-    return render_template('product.html', productName = "hej")
+@app.route("/product/<productName>")
+def product(productName):
+    return render_template('product.html', productName = "hej", description = "Det här är en tomat")
 
 @app.route("/logout")
 def logout():
