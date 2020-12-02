@@ -92,10 +92,11 @@ def addProduct(pid, stock, description, price, brand):
 @app.route("/", methods=['GET', 'POST'])
 def home():
     form = LoginForm()
+
     if is_logged_in():
-        data=f'logged in as {session["username"]}'
+        data = f'logged in as {session["username"]}'
         if 'admin' in session:
-            return render_template("index.html", logged_in=True,admin=True, data=data, form=form)
+            return render_template("index.html", logged_in=True, admin=True, data=data, form=form)
         else:
             return render_template("index.html", logged_in=True, data=data, form=form)
 
@@ -103,7 +104,7 @@ def home():
         username = form.username.data
         password = form.password.data
         response = make_response()
-        if username[0]=='#':
+        if username[0] == '#':
             if log_in(username[1:], password, as_admin=True):
                 session['admin'] = username
                 session['username'] = username
@@ -115,7 +116,12 @@ def home():
 
 @app.route("/about")
 def about():
-    return "Our incredible site!"
+    return product()
+    #return "Our incredible site!"
+
+@app.route("/product")
+def product():
+    return render_template('product.html', productName = "hej")
 
 @app.route("/logout")
 def logout():
@@ -165,5 +171,5 @@ def admin():
 
 if __name__ == "__main__":
     # Load local db_conf.json file
-    Conn_db.load_conf()
+    #Conn_db.load_conf()
     app.run(debug=True)

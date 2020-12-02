@@ -26,4 +26,3 @@ class RegisterForm(FlaskForm):
     confirm = PasswordField('Confirm Password')
     register = SubmitField('Register')
 
-

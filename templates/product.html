@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block custom_head %}
+    <link rel="stylesheet" href="../static/productpage.css"></link>
+{% endblock custom_head %}
+
+{% block content %}#}
+<div class="productEntity">
+            <div class="product" id="product">
+                <a href="#"><img class="productImage" id="productImage" src="http://placehold.it/700x400" alt=""></a>
+                <div class="productName">
+                <p class="card-text">
+                    {{productName}}
+                </p>
+                </div>
+            </div>
+        </div>
+{% endblock content %}
