@@ -1,51 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, make_response
 from forms import LoginForm, AdminAddProduct,RegisterForm
 from product import Product
-from mysql.connector import Error, errorcode
 from db_conn import Conn_db
-
+import database as db
 
 app = Flask(__name__)
 app.config['SECRET_KEY']='DEV'
-
-
-def user_exists(username, check_admin=False):
-    with Conn_db() as conn:
-        if check_admin:
-            query = "SELECT username FROM Admin WHERE username=%s;"
-        else:
-            query = "SELECT username FROM User WHERE username=%s;"
-        cursor = conn.cursor()
-        cursor.execute(query, (username,))
-        attr = cursor.fetchall()
-        cursor.close()
-        # attr is 'None' if no user was found
-        if attr:
-            return True
-    return False
-
-
-def add_user_db(username, password):
-    """
-        Add a user to the 'User' table.
-        If user already exists return False.
-    """
-    with Conn_db() as conn:
-        conn.autocommit = False
-        cursor = conn.cursor()
-        lookup_query = 'SELECT username FROM User where username=%s'
-        cursor.execute(lookup_query, (username,))
-
-        if cursor.fetchone():
-            conn.rollback() # Unsure about this rollback
-            cursor.close()
-            return False # User already exists.
-
-        insert_query = 'INSERT INTO User(username, password) VALUES(%s, %s)'
-        cursor.execute(insert_query, (username, password))
-        conn.commit()
-        cursor.close()
-    return True
 
 
 def is_logged_in(check_admin=False):
@@ -62,32 +22,8 @@ def is_logged_in(check_admin=False):
     check_admin = check_admin or username[0] == '#'
     if username[0] == '#':
         username = username[1:]
-    return user_exists(username, check_admin)
+    return db.user_exists(username, check_admin)
 
-
-def log_in(username, password, as_admin=False):
-    with Conn_db() as conn:
-        cursor = conn.cursor()
-        if as_admin:
-            lookup_query = 'SELECT username FROM Admin where username=%s and password=%s'
-        else:
-            lookup_query = 'SELECT username FROM User where username=%s and password=%s'
-        cursor.execute(lookup_query, (username, password))
-
-        if cursor.fetchone():
-            return True
-    return False
-
-def addProduct(pid, stock, description, price, brand):
-    print("AAAAAH")
-    with Conn_db() as conn:
-        print("lmao")
-        cursor = conn.cursor()
-        query = "INSERT INTO product(idproduct, price, stock, description, brand) VALUES(%s,%s,%s,%s,%s);"
-        cursor.execute(query, (pid, price, stock, description, brand))
-        attr = cursor.fetchone()
-        cursor.close()
-    return True
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -104,10 +40,10 @@ def home():
         password = form.password.data
         response = make_response()
         if username[0]=='#':
-            if log_in(username[1:], password, as_admin=True):
+            if db.log_in(username[1:], password, as_admin=True):
                 session['admin'] = username
                 session['username'] = username
-        elif log_in(username, password):
+        elif db.log_in(username, password):
             session['username'] = username
         return redirect(url_for('home'))
     return render_template("index.html", data='logged out', form=form)
@@ -149,8 +85,8 @@ def register():
 
 @app.route("/adminpage", methods=['GET', 'POST'])
 def admin():
-    #if not is_logged_in(check_admin=True):
-    #    return redirect(url_for('home'))
+    if not is_logged_in(check_admin=True):
+        return redirect(url_for('home'))
     form = AdminAddProduct()
     if request.method == 'POST':
         if form.validate_on_submit():
