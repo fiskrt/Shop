@@ -9,7 +9,7 @@ def add_review(username, rating, comment, prod_id):
     """
     with Conn_db() as conn:
         query = ('INSERT INTO Review'
-                '(author, rating, comment, idProduct)'
+                '(author, rating, comment, idProduct) '
                 'VALUES(%s, %s, %s, %s);')
         cursor = conn.cursor()
         cursor.execute(query, (username, rating, comment, prod_id))
@@ -38,7 +38,7 @@ def add_to_order_history():
     """
     with Conn_db() as conn:
         query = ('INSERT INTO Review'
-                '(author, rating, comment, idProduct)'
+                '(author, rating, comment, idProduct) '
                 'VALUES(%s, %s, %s, %s);')
         cursor = conn.cursor()
 #        cursor.execute(query, (username, rating, comment, prod_id))
@@ -89,12 +89,12 @@ def log_in(username, password, as_admin=False):
     with Conn_db() as conn:
         cursor = conn.cursor()
         if as_admin:
-            lookup_query = ('SELECT username'
-                            'FROM Admin'
+            lookup_query = ('SELECT username '
+                            'FROM Admin '
                             'WHERE username=%s and password=%s;')
         else:
-            lookup_query = ('SELECT username' 
-                            'FROM User'
+            lookup_query = ('SELECT username ' 
+                            'FROM User '
                             'WHERE username=%s and password=%s;')
         cursor.execute(lookup_query, (username, password))
 
@@ -106,8 +106,8 @@ def log_in(username, password, as_admin=False):
 def addProduct(pid, stock, description, price, brand):
     with Conn_db() as conn:
         cursor = conn.cursor()
-        query = ('INSERT INTO product'
-                '(idproduct, price, stock, description, brand)'
+        query = ('INSERT INTO product '
+                '(idproduct, price, stock, description, brand) '
                 'VALUES(%s,%s,%s,%s,%s);')
         cursor.execute(query, (pid, price, stock, description, brand))
         conn.commit()
