@@ -16,22 +16,24 @@ def add_review(username, rating, comment, prod_id):
         conn.commit()
         cursor.close()
 
+
 def create_order_history():
     """
         When a user checks out insert into the junction table 
     """
+    pass
 
 def add_to_order_history():
     """
         When user checks out add the purchased products
         to the purchase history.
 
-        First, set the 'User_has_Order' junction table. This
-        maps a user to a order which has also has a order date.
+        First, add a new entry to 'User_has_Order' junction table.
+        This maps a user to a order which has also has a order date.
 
-        First add the purchased product to the 'Sold_Product'
+        Then, add the purchased product to the 'Sold_Product'
         table so it's not modified.
-        Then add the purchased product and quantity to the 
+        Finally, add the purchased product and quantity to the 
         'Order_History' table.
     """
     with Conn_db() as conn:
@@ -42,9 +44,6 @@ def add_to_order_history():
 #        cursor.execute(query, (username, rating, comment, prod_id))
         conn.commit()
         cursor.close()
-
-
-
 
 
 def user_exists(username, check_admin=False):

@@ -73,7 +73,7 @@ def register():
         name = form.name.data
         email = form.email.data
         password = form.password.data
-        if add_user_db(name, password):
+        if db.add_user_db(name, password):
             #session['username'] = name # Log in user auto...
             return redirect(url_for('home'))
         else:
@@ -88,14 +88,13 @@ def admin():
     if not is_logged_in(check_admin=True):
         return redirect(url_for('home'))
     form = AdminAddProduct()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            pid = form.productID.data
-            stock = form.stock.data
-            description = form.description.data
-            price = form.price.data
-            brand = form.brand.data
-            addProduct(pid, stock, description, price, brand)
+    if form.validate_on_submit():
+        pid = form.productID.data
+        stock = form.stock.data
+        description = form.description.data
+        price = form.price.data
+        brand = form.brand.data
+        db.addProduct(pid, stock, description, price, brand)
 
     return render_template("adminpage.html", form=form)
 
