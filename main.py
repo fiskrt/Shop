@@ -41,9 +41,12 @@ def home():
         password = form.password.data
         response = make_response()
 <<<<<<< HEAD
+<<<<<<< HEAD
         if username[0]=='#':
             if db.log_in(username[1:], password, as_admin=True):
 =======
+=======
+>>>>>>> 26094e3f799c33d38fa778472d1df3f4fead54b9
         if username[0] == '#':
             if log_in(username[1:], password, as_admin=True):
 >>>>>>> 26094e3f799c33d38fa778472d1df3f4fead54b9
