@@ -7,22 +7,31 @@ def add_review(username, rating, comment, prod_id):
     """
         Adds a review(comment + star-rating) for a product
         to the 'Review' table.
+
+        Returns False if the review was not added.
     """
     with Conn_db() as conn:
         query = ('INSERT INTO Review'
                 '(idUser, rating, comment, idProduct) '
                 'VALUES(%s, %s, %s, %s);')
         cursor = conn.cursor()
-        cursor.execute(query, (user_to_id(username), rating, comment, prod_id))
-        conn.commit()
-        cursor.close()
+        try:
+            cursor.execute(query, (user_to_id(username), rating, comment, prod_id))
+        except Error as e:
+            return False
+        finally:
+            conn.commit()
+            cursor.close()
+    return True
+
+
 
 def get_products(prod_name=None):
     """
         Note that the price's type is decimal.Decimal
     """
     with Conn_db() as conn:
-        cursor = conn.cursor()
+        cursor = conn.cursor(dictionary=True)
         if prod_name:
             query = "SELECT * FROM Product WHERE name=%s;"
             cursor.execute(query, (prod_name,))
@@ -34,13 +43,19 @@ def get_products(prod_name=None):
     return attr
 
 def get_star_rating(prod_id):
+    """
+        Get the star-rating (scale 0-5) of prod_id
+        If no ratings are given 0 is returned.
+    """
     with Conn_db() as conn:
         cursor = conn.cursor()
         query = "SELECT AVG(rating) FROM Review WHERE idProduct=%s;"
         cursor.execute(query, (prod_id,))
         average = cursor.fetchone()[0]
         cursor.close()
-    return average 
+    if average:
+        return average
+    return 0
 
 def get_reviews(prod_id):
     """
@@ -72,6 +87,25 @@ def user_to_id(username):
         cursor.close()
     # attr is 'None' if no user was found, will crash
     return attr[0][0]
+
+
+def get_basket_products(user):
+    """
+        Returns a list of products from a users basket.
+    """
+    user_id = user_to_id(user)
+    with Conn_db() as conn:
+        query = ('SELECT P.idProduct, P.name, P.price, P.description, '
+                    'P.brand, P.image_path, BE.quantity '
+                    'FROM Product P '
+                    'JOIN Basket_Entry BE '
+                    'ON BE.idProduct=P.idProduct AND BE.idUser=%s;')
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(query, (user_id,))
+        products = cursor.fetchall()
+        conn.commit()
+        cursor.close()
+    return products
 
 
 def add_to_basket(user, quantity, product_id):
@@ -212,14 +246,20 @@ def addProduct(pid, stock, description, price, brand):
     return True
 
 
-if __name__ == "__main__":
-    print('Database debugging.')
-    Conn_db.load_conf()
+def test_basket():
     add_to_basket('filip', 20, 1)
     add_to_basket('filip', 1, 2)
     add_to_basket('max', 2, 2)
     add_to_basket('max', 2, 1)
-
-
     checkout('max')
-    #get_stars(1)
+
+
+def test_reviews():
+    add_review('filip', 3, 'den smakade ganska bra!', 1)
+    add_review('max', 5, 'den smakade bra!', 1)
+
+
+if __name__ == "__main__":
+    print('Database debugging.')
+    Conn_db.load_conf()
+    test_reviews()

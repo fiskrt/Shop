@@ -31,10 +31,13 @@ def home():
 
     if is_logged_in():
         data = f'logged in as {session["username"]}'
+        products = db.get_products()
+        for p in products:
+            p['rating'] = int(db.get_star_rating(p['idProduct']))
         if 'admin' in session:
-            return render_template("index.html", logged_in=True, admin=True, data=data, form=form)
+            return render_template("index.html", products=products, logged_in=True, admin=True, data=data, form=form)
         else:
-            return render_template("index.html", logged_in=True, data=data, form=form)
+            return render_template("index.html", products=products,logged_in=True, data=data, form=form)
 
     if form.validate_on_submit():
         username = form.username.data
@@ -47,18 +50,29 @@ def home():
         elif db.log_in(username, password):
             session['username'] = username
         return redirect(url_for('home'))
-    return render_template("index.html", data='logged out', form=form)
+    return render_template("index.html", products=products,data='logged out', form=form)
 
 
 @app.route("/about")
 def about():
-    return product()
-    #return "Our incredible site!"
+    return "Our incredible site!"
 
 @app.route("/product/<productId>")
 def product(productId):
     lookup_query = 'SELECT picture FROM Product where idProduct=productId'
     return render_template('product.html', productName = "hej", description = "Det här är en tomat")
+
+@app.route("/basket")
+def basket():
+    if not is_logged_in():
+        return redirect(url_for('home'))
+
+    products = db.get_basket_products(session['username'])
+    for p in products:
+        p['rating'] = int(db.get_star_rating(p['idProduct']))
+
+    print(products)
+    return render_template('basket.html', products=products)
 
 @app.route("/logout")
 def logout():
