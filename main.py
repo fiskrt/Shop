@@ -28,10 +28,11 @@ def is_logged_in(check_admin=False):
 @app.route("/", methods=['GET', 'POST'])
 def home():
     form = LoginForm()
+
     if is_logged_in():
-        data=f'logged in as {session["username"]}'
+        data = f'logged in as {session["username"]}'
         if 'admin' in session:
-            return render_template("index.html", logged_in=True,admin=True, data=data, form=form)
+            return render_template("index.html", logged_in=True, admin=True, data=data, form=form)
         else:
             return render_template("index.html", logged_in=True, data=data, form=form)
 
@@ -51,7 +52,13 @@ def home():
 
 @app.route("/about")
 def about():
-    return "Our incredible site!"
+    return product()
+    #return "Our incredible site!"
+
+@app.route("/product/<productId>")
+def product(productId):
+    lookup_query = 'SELECT picture FROM Product where idProduct=productId'
+    return render_template('product.html', productName = "hej", description = "Det här är en tomat")
 
 @app.route("/logout")
 def logout():
