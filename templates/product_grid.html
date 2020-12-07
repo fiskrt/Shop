@@ -1,22 +1,22 @@
 <div class="col-lg-9">
     <div class="row">
-        {% for i in range(6) %}
+        {% for i in range(products|length) %}
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100">
                 <a href="{{ url_for('product', productId = i)}}"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                 <div class="card-body">
                     <h4 class="card-title">
-                        <a href="#">Item {{ i+1 }}</a>
+                        <a href="{{ url_for('product', productId = i)}}">{{ products[i]['name'] }}</a>
                     </h4>
-                    <h5>$24.99</h5>
+                    <h5>${{ products[i]['price'] }}</h5>
                     <p class="card-text">
-                        MONEY MONEY MONEY
+                        {{ products[i]['description']}}
                     </p>
                 </div>
                 <div class="card-footer">
                     <small class="text-muted">
-                    {% for _ in range(3) %} &#9733; {% endfor %}
-                    {% for _ in range(2) %} &#9734; {% endfor %}
+                    {% for _ in range(products[i]['rating']) %} &#9733; {% endfor %}
+                    {% for _ in range(5-products[i]['rating']) %} &#9734; {% endfor %}
                     </small>
                 </div>
             </div>
