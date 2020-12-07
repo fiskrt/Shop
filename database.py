@@ -104,28 +104,26 @@ def remove_from_basket(user, prod_id):
 
 def checkout(user):
     """
-        When user checks out add the purchased products
+        When user checks out move the purchased products
         to the purchase history.
 
         1) Add a new entry to 'User_has_Order' junction table.
         This creates a new orderID for a user.
 
-        2) Add the products from the basket to the 'Sold_Product'
-        table so it's not modified.
+        2) Add the products and quantites from the basket to 'Order_Entry'.
+        NOTE: The products' name and price is copied without relations
+        to the old product.
 
-        3) Add the purchased product and quantity to the 
-        'Order_History' table.
-
-        4) Empty the basket for the specified user.
+        3) Empty the basket for the specified user.
     """
     user_id = user_to_id(user)
     current_date = datetime.datetime.now().strftime('%Y-%m-%d')
     with Conn_db() as conn:
-        query = ('INSERT INTO User_has_Order'
+        cursor = conn.cursor()
+        q1 = ('INSERT INTO User_has_Order'
                 '(idUser, order_date)'
                 'VALUES(%s, %s);')
-        cursor = conn.cursor()
-        cursor.execute(query, (user_id, current_date))
+        cursor.execute(q1, (user_id, current_date))
         order_id = cursor.lastrowid
 
         q2 = ('INSERT INTO Order_Entry '
@@ -136,9 +134,9 @@ def checkout(user):
                 'ON BE.idUser=%s AND P.idProduct=BE.idProduct;')
         cursor.execute(q2, (order_id, user_id))
 
-        q_del = ('DELETE FROM Basket_Entry '
+        q3 = ('DELETE FROM Basket_Entry '
                     'WHERE idUser=%s;')
-        cursor.execute(q_del, (user_id, ))
+        cursor.execute(q3, (user_id, ))
 
         conn.commit()
         cursor.close()
