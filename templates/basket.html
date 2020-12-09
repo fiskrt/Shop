@@ -18,8 +18,16 @@
                     <h5>${{ products[i]['price'] }}</h5>
                     <p class="card-text">
                         {{ products[i]['description']}}
-                        you added: {{products[i]['quantity']}}
                     </p>
+                    <form method="post" action=""></form>
+                        <div id='bullshit'>
+                         <label id="quantity">Quantity: {{products[i]['quantity']}}</label>
+                        {{ form.hidden_tag() }}
+                        {{ form.increment(class="btn", onclick="incQuantity(this)") }}
+                        {{ form.decrement(class="btn", onclick="decQuantity()") }}
+                        {{ form.delete(class="btn") }}
+                        </div>
+                    </form>
                 </div>
                 <div class="card-footer">
                     <small class="text-muted">
@@ -32,4 +40,20 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+  function incQuantity(par) {
+    var label = par.previousElementSibling.previousElementSibling;
+    console.log(par);
+    console.log(label);
+//    var label = par.getElementById('quantity');
+    var q = parseInt(label.textContent.substring(10));
+    label.textContent = 'Quantity: ' + (q+1);
+  }
+  function decQuantity() {
+    var label = document.getElementById('quantity-' + index);
+    var q = parseInt(label.textContent.substring(10));
+    label.textContent = 'Quantity: ' + (q-1);
+  }
+</script>
 {% endblock content %}
