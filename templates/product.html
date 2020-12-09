@@ -1,35 +1,20 @@
 {% extends "base.html" %}
 
 {% block custom_head %}
-    <link rel="stylesheet" href="../static/productpage.css"></link>
+<link rel="stylesheet" href="../static/productpage.css">
+</link>
 {% endblock custom_head %}
 
 {% block content %}
-    <div class="productEntity">
-        <div class="product" id="product">
-            <a href="#"><img class="productImage" id="productImage" src="http://placehold.it/700x400" alt=""></a>
-        </div>
-        <div class="productInfo">
-            <h2> {{ productName }} </h2>
-            <p class="productDescription">
-                {{ description }} </p>
-        </div>
+<div class="productEntity">
+    <div class="product" id="product">
+        <a href="#"><img class="productImage" id="productImage" src="http://placehold.it/700x400" alt=""></a>
     </div>
-    <div class="reviews">
-        <form action="/action_page.php">
-            <label for="review">Review this product:</label>
-            <input type="text" id="review" name="review"><br><br>
-            <input type="submit" value="Submit">
-        </form>
-        <div class="pastReviewsBlock">
-            {% for i in range(products|length) %}
-                </div>
-                <div class="pastReviews">
-
-                </div>
-            {% endfor %}
+    <div class="productInfo">
+        <h2> {{productName}} </h2>
+        <p class="productDescription">
+            {{description}} </p>
     </div>
-{% endblock content %}
-
+</div>
 </div>
 {% endblock content %}
