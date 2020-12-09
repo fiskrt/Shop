@@ -262,4 +262,8 @@ def test_reviews():
 if __name__ == "__main__":
     print('Database debugging.')
     Conn_db.load_conf()
+    add_user_db('filip','hej')
+    add_user_db('max','hej')
     test_reviews()
+
+

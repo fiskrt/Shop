@@ -15,21 +15,7 @@
                 {{ description }} </p>
         </div>
     </div>
-    <div class="reviews">
-        <form action="/action_page.php">
-            <label for="review">Review this product:</label>
-            <input type="text" id="review" name="review"><br><br>
-            <input type="submit" value="Submit">
-        </form>
-        <div class="pastReviewsBlock">
-            {% for i in range(products|length) %}
-                </div>
-                <div class="pastReviews">
-
-                </div>
-            {% endfor %}
-    </div>
-{% endblock content %}
-
 </div>
 {% endblock content %}
+
+{%include "reviews.html" %}

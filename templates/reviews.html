@@ -1,0 +1,17 @@
+
+<div class="reviews">
+    <form action="/action_page.php">
+        <label for="review">Review this product:</label>
+        <input type="text" id="review" name="review"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <div class="pastReviewsBlock">
+        {% for i in range(reviews|length) %}
+            <div class="pastReviews">
+            {% for _ in range(products[i]['rating']) %} &#9733; {% endfor %}
+                <span>{% products[i][0] %}</span>
+                <span>{% products[i][1] %}</span>
+            </div>
+        {% endfor %}
+    </div>
+</div>
