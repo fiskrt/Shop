@@ -25,6 +25,17 @@ def add_review(username, rating, comment, prod_id):
     return True
 
 
+def get_product_by_id(prod_id):
+    """
+        Note that the price's type is decimal.Decimal
+    """
+    with Conn_db() as conn:
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT * FROM Product WHERE idProduct=%s;"
+        cursor.execute(query, (prod_id,))
+        attr = cursor.fetchall()[0]
+        cursor.close()
+    return attr
 
 def get_products(prod_name=None):
     """

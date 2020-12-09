@@ -64,10 +64,10 @@ def about():
 
 @app.route("/product/<productId>")
 def product(productId):
-    lookup_query = 'SELECT picture FROM Product where idProduct=productId'
+    product=db.get_product_by_id(productId)
     reviews = db.get_reviews(productId)
-    return render_template('product.html', productName="hej", description="Det här är en tomat")
-                           #reviews=reviews)
+    print(reviews)
+    return render_template('product.html', product=product,reviews=reviews)
 
 
 @app.route("/basket")

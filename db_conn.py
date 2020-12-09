@@ -13,8 +13,8 @@ class Conn_db:
 
     @staticmethod 
     def load_conf():
-        josn2= 'C:\\Users\\alexa\\PycharmProjects\\Shop\\db_conf.json'
-        with open(josn2) as f:
+        #josn2= 'C:\\Users\\alexa\\PycharmProjects\\Shop\\db_conf.json'
+        with open('db_conf.json') as f:
             Conn_db.db_conf = json.load(f) 
 
     def __enter__(self):

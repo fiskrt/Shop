@@ -8,6 +8,20 @@
 {% block content %}
     <div class="productEntity">
         <div class="product" id="product">
+            <a href="#"><img class="productImage" id="productImage" src="..\{{ product['image_path'] }}" alt=""></a>
+        </div>
+        <div class="productInfo">
+            <h2> {{ product['name'] }} </h2>
+            <p class="productDescription">
+                {{ product['description'] }} </p>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{#{% block content %}
+    <div class="productEntity">
+        <div class="product" id="product">
             <a href="#"><img class="productImage" id="productImage" src="http://placehold.it/700x400" alt=""></a>
         </div>
         <div class="productInfo">
@@ -17,7 +31,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+{% endblock content %}#}
 
 {%include "reviews.html" %}
 
