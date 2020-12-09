@@ -6,11 +6,10 @@ margin-left: auto;
 margin-right: auto;
 }
 
-.productImage {
+img {
   height: auto;
     width: auto;
-    max-width: 300px;
-    max-height: 300px;
+    max-width: 600px;
 }
 
 

@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="../static/review.css">
 
 {#<div class="comments">
     <form action="/action_page.php">
@@ -16,19 +15,19 @@
     </div>
 </div>#}
 
-  <section class="comments">
+<section class="comments">
   <h2>Reviews</h2>
   {% if reviews|length == 0 %}
   <p>Be the first to leave a review</p>
   {% endif %}
-{% for i in range(reviews|length) %}
-      <article class="comment">
-      <div class="comment-body">
-        <div class="text">
-          <p>{{ reviews[i]['comment'] }}</p>
-        </div>
-        <p class="attribution">by <a href="#non">{{ reviews[i]['username'] }}</a> at 14:23pm, 4 Dec 2015</p>
+  {% for i in range(reviews|length) %}
+  <article class="comment">
+    <div class="comment-body">
+      <div class="text">
+        <p>{{ reviews[i]['comment'] }}</p>
       </div>
-    </article>
-      {% endfor %}
-  </section>
+      <p class="attribution">by <a href="#non">{{ reviews[i]['username'] }}</a> at 14:23pm, 4 Dec 2015</p>
+    </div>
+  </article>
+  {% endfor %}
+</section>

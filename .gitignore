@@ -10,3 +10,4 @@ database/
 db_conf.json
 decode_cookie.py
 .vscode/
+static/pictures/

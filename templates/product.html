@@ -1,37 +1,20 @@
 {% extends "base.html" %}
 
 {% block custom_head %}
-<link rel="stylesheet" href="../static/productpage.css">
-</link>
+<link rel="stylesheet" href="../static/productpage.css"></link>
+<link rel="stylesheet" href="../static/review.css">
 {% endblock custom_head %}
 
 {% block content %}
-    <div class="productEntity">
-        <div class="product" id="product">
-            <a href="#"><img class="productImage" id="productImage" src="..\{{ product['image_path'] }}" alt=""></a>
-        </div>
-        <div class="productInfo">
-            <h2> {{ product['name'] }} </h2>
-            <p class="productDescription">
-                {{ product['description'] }} </p>
-        </div>
+<div class="productEntity">
+    <div class="product" id="product">
+        <img class="productImage" id="productImage" src="..\{{ product['image_path'] }}" alt="">
+    </div>
+    <div class="productInfo">
+        <h2> {{ product['name'] }} </h2>
+        <p class="productDescription">
+            {{ product['description'] }} </p>
     </div>
 </div>
-{% endblock content %}
-
-{#{% block content %}
-    <div class="productEntity">
-        <div class="product" id="product">
-            <a href="#"><img class="productImage" id="productImage" src="http://placehold.it/700x400" alt=""></a>
-        </div>
-        <div class="productInfo">
-            <h2> {{ productName }} </h2>
-            <p class="productDescription">
-                {{ description }} </p>
-        </div>
-    </div>
-</div>
-{% endblock content %}#}
-
 {%include "reviews.html" %}
-
+{% endblock content %}
