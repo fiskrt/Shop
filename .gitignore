@@ -9,3 +9,4 @@ static/boot/
 database/
 db_conf.json
 decode_cookie.py
+.vscode/

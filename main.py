@@ -28,6 +28,9 @@ def is_logged_in(check_admin=False):
 @app.route("/", methods=['GET', 'POST'])
 def home():
     form = LoginForm()
+    products = db.get_products()
+    for p in products:
+        p['rating'] = int(db.get_star_rating(p['idProduct']))
 
     products = db.get_products()
     for p in products:
@@ -111,20 +114,30 @@ def register():
         return render_template('register.html', form=form)
 
 
+def save_image(image_name):
+    """
+        When admin uploads a picture save it in
+        the picture directory with the name
+        {{prod_id}}.jpg
+    """
+    pass
+
 @app.route("/adminpage", methods=['GET', 'POST'])
 def admin():
     if not is_logged_in(check_admin=True):
         return redirect(url_for('home'))
     form = AdminAddProduct()
     if form.validate_on_submit():
-        pid = form.productID.data
-        stock = form.stock.data
-        description = form.description.data
+        name = form.name.data
         price = form.price.data
+        description = form.description.data
         brand = form.brand.data
-        db.addProduct(pid, stock, description, price, brand)
+        path = 'static/pictures/'
+        prod_id = db.add_product(name, price, description, brand, path)
+        if prod_id:
+            image = form.image.data.save(path + str(prod_id) + '.jpg')
 
-    return render_template("adminpage.html", form=form)
+    return render_template("adminpage.html", form=form, admin=True)
 
 
 if __name__ == "__main__":

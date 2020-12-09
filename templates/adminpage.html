@@ -5,36 +5,34 @@ Admino
 {% endblock title %}
 
 {% block custom_head %}
-    <link rel="stylesheet" href="../static/adminpage.css"></link>
+<link rel="stylesheet" href="../static/adminpage.css">
+</link>
 {% endblock custom_head %}
 
 
 {% block content %}
-  <div class="AddProductForm" id="AddProduct">
-   <form method="post" action="" class="form-container">
+<div class="AddProductForm" id="AddProduct">
+	<form method="post" enctype="multipart/form-data" action="" class="form-container">
 
-       {{ form.hidden_tag() }}
+		{{ form.hidden_tag() }}
 
-       {{ form.productID.label}}
-	{{ form.productID(placeholder="Product ID")}}
+		{{ form.name.label}}
+		{{ form.name(placeholder="Product name")}}
 
-	{{ form.stock.label}}
-	{{ form.stock(placeholder="Enter Stock")}}
+		{{ form.description.label}}
+		{{ form.description(placeholder="Enter Description")}}
 
-       	{{ form.description.label}}
-	{{ form.description(placeholder="Enter Description")}}
+		{{ form.image.label}}
+		{{ form.image()}}
 
-       	{{ form.image.label}}
-	{{ form.image(placeholder="Enter Stock")}}
+		{{ form.price.label}}
+		{{ form.price(placeholder="Enter Price")}}
 
-       {{ form.price.label}}
-	{{ form.price(placeholder="Enter Price")}}
+		{{ form.brand.label}}
+		{{ form.brand(placeholder="Enter Brand")}}
 
-       	{{ form.brand.label}}
-	{{ form.brand(placeholder="Enter Brand")}}
+		{{ form.submit(class="btn") }}
 
-       {{ form.submit(class="btn") }}
-
-   </form>
- </div>
+	</form>
+</div>
 {% endblock content %}

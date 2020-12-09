@@ -8,11 +8,10 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Log In')
 
 class AdminAddProduct(FlaskForm):
-    productID = StringField('Product ID')
-    stock = IntegerField('Stock')
+    name = StringField('Name')
+    price = IntegerField('Price')
     description = StringField('Description')
     image = FileField('Image')
-    price = IntegerField('Price')
     brand = StringField('Brand')
     submit = SubmitField('Add product')
 
