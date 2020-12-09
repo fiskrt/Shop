@@ -44,7 +44,7 @@ def get_products(prod_name=None):
 
 def get_star_rating(prod_id):
     """
-        Get the star-rating (scale 0-5) of prod_id
+        Get the star-rating (scale 1-5) of prod_id
         If no ratings are given 0 is returned.
     """
     with Conn_db() as conn:
@@ -60,15 +60,14 @@ def get_star_rating(prod_id):
 def get_reviews(prod_id):
     """
         Returns a list of reviews for the product with id 'prod_id'.
-        Each entry is of the form: (comment, username)
+        Each review is in dictionary form.
     """
     with Conn_db() as conn:
-        query = ('SELECT R.comment, U.username '
+        query = ('SELECT R.comment, U.username, R.rating '
                 'FROM Review R '
-                'WHERE R.idProduct=%s '
                 'JOIN User U '
-                'ON U.idUser=R.idUser;')
-        cursor = conn.cursor()
+                'ON U.idUser=R.idUser AND R.idProduct=%s;')
+        cursor = conn.cursor(dictionary=True)
         cursor.execute(query, (prod_id,))
         attr = cursor.fetchall()
         cursor.close()
@@ -233,17 +232,23 @@ def log_in(username, password, as_admin=False):
     return False
 
 
-def addProduct(pid, stock, description, price, brand):
+def add_product(name, price, description, brand, path):
+    """
+        Adds a product and returns the product id.
+    """
     with Conn_db() as conn:
         cursor = conn.cursor()
-        query = ('INSERT INTO product '
-                '(idproduct, price, stock, description, brand) '
-                'VALUES(%s,%s,%s,%s,%s);')
-        cursor.execute(query, (pid, price, stock, description, brand))
+        query = ('INSERT INTO Product '
+                '(name, price, description, brand) '
+                'VALUES(%s,%s,%s,%s);')
+        cursor.execute(query, (name, price, description, brand))
+        prod_id = cursor.lastrowid
+        path += str(prod_id) + '.jpg'
+        q2 = 'UPDATE Product SET image_path=%s WHERE idProduct=%s'
+        cursor.execute(q2, (path, prod_id))
         conn.commit()
-        #attr = cursor.fetchone() what is fetched here?
         cursor.close()
-    return True
+    return prod_id
 
 
 def test_basket():
