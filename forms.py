@@ -7,6 +7,12 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password')
     submit = SubmitField('Log In')
 
+class BasketForm(FlaskForm):
+    increment = SubmitField('+')
+    decrement = SubmitField('-')
+    delete = SubmitField('X')
+
+
 class AdminAddProduct(FlaskForm):
     name = StringField('Name')
     price = IntegerField('Price')

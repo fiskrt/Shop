@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, make_response
-from forms import LoginForm, AdminAddProduct,RegisterForm
+from forms import LoginForm, AdminAddProduct,RegisterForm, BasketForm
 from product import Product
 from db_conn import Conn_db
 import database as db
@@ -71,8 +71,9 @@ def basket():
     for p in products:
         p['rating'] = int(db.get_star_rating(p['idProduct']))
 
+    form = BasketForm()
     print(products)
-    return render_template('basket.html', products=products)
+    return render_template('basket.html', products=products, form=form)
 
 @app.route("/logout")
 def logout():
