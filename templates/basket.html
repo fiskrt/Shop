@@ -76,7 +76,7 @@ Register gang
                         <a
                             href="{{ url_for('product', productId = products[i]['idProduct'])}}">{{ products[i]['name'] }}</a>
                     </h4>
-                    <h5>${{ products[i]['price'] }}</h5>
+                    <h5>{{ products[i]['price'] }} kr</h5>
                     <p class="card-text">
                         {{ products[i]['description']}}
                     </p>
