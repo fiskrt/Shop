@@ -78,11 +78,6 @@ def home():
     )
 
 
-@app.route("/about")
-def about():
-    return "Our incredible site!"
-
-
 @app.route("/product/<productId>", methods=['GET', 'POST'])
 def product(productId):
     form = CommentForm()
@@ -101,8 +96,6 @@ def product(productId):
         return render_template('product.html', product=product,reviews=reviews, form=form,logged_in=logged_in)
     return render_template('product.html', product=product,reviews=reviews,form=form,logged_in=logged_in)
     user = session['username']
-
-
 
 
 @app.route("/basket", methods=["GET", "POST"])

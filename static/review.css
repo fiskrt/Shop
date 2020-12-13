@@ -5,6 +5,12 @@ body {
     background: #f3eee9;
 }
 
+img {
+  height: auto;
+    width: auto;
+    max-width: 600px;
+}
+
 p {
     margin: 0 0 1em;
 }

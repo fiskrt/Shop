@@ -26,7 +26,7 @@
 <button type="submit" class="btn">Login</button>
 -->
 {% if logged_in %}
-    <div class="CommentForm" id=CommentForm">
+    <div class="CommentForm" id="CommentForm">
         <form method="post" action="" class="form-container">
 
             {{ form.hidden_tag() }}
@@ -57,7 +57,7 @@
                         </small>
                     </div>
                 </div>
-                <p class="attribution">by <a href="#non">{{ reviews[i]['username'] }}</a> at 14:23pm, 4 Dec 2015</p>
+                <p class="attribution">by {{ reviews[i]['username'] }}</p>
             </div>
         </article>
     {% endfor %}

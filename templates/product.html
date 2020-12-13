@@ -11,9 +11,9 @@
         <img class="productImage" id="productImage" src="..\{{ product['image_path'] }}" alt="">
     </div>
     <div class="productInfo">
-        <h2> {{ product['name'] }} </h2>
+        <h2> {{ product['name'] }} | {{ product['price'] }} kr </h2>
         <p class="productDescription">
-            {{ product['description'] }} </p>
+            {{ product['description'] }}</p>
     </div>
 </div>
 {%include "reviews.html" %}
