@@ -1,4 +1,3 @@
-
 {#<div class="comments">
     <form action="/action_page.php">
         <label for="review">Review this product:</label>
@@ -15,19 +14,51 @@
     </div>
 </div>#}
 
-<section class="comments">
-  <h2>Reviews</h2>
-  {% if reviews|length == 0 %}
-  <p>Be the first to leave a review</p>
-  {% endif %}
-  {% for i in range(reviews|length) %}
-  <article class="comment">
-    <div class="comment-body">
-      <div class="text">
-        <p>{{ reviews[i]['comment'] }}</p>
-      </div>
-      <p class="attribution">by <a href="#non">{{ reviews[i]['username'] }}</a> at 14:23pm, 4 Dec 2015</p>
+
+<!--
+<label for="email"><b>Email</b></label>
+<input type="text" placeholder="Enter Email" name="email" required>
+
+
+<label for="psw"><b>Password</b></label>
+<input type="password" placeholder="Enter Password" name="psw" required>
+
+<button type="submit" class="btn">Login</button>
+-->
+{% if logged_in %}
+    <div class="CommentForm" id=CommentForm">
+        <form method="post" action="" class="form-container">
+
+            {{ form.hidden_tag() }}
+            {{ form.comment.label }}
+            {{ form.comment(placeholder="Comment") }}
+            {{ form.rating.label }}
+            {{ form.rating(placeholder="Rate") }}
+            {{ form.submit(class="btn") }}
+        </form>
     </div>
-  </article>
-  {% endfor %}
+{% endif %}
+
+
+<section class="comments">
+    <h2>Reviews</h2>
+    {% if reviews|length == 0 %}
+        <p>Be the first to leave a review</p>
+    {% endif %}
+    {% for i in range(reviews|length) %}
+        <article class="comment">
+            <div class="comment-body">
+                <div class="text">
+                    <p>{{ reviews[i]['comment'] }}</p>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            {% for _ in range(reviews[i]['rating']) %} &#9733; {% endfor %}
+                            {% for _ in range(5-reviews[i]['rating']) %} &#9734; {% endfor %}
+                        </small>
+                    </div>
+                </div>
+                <p class="attribution">by <a href="#non">{{ reviews[i]['username'] }}</a> at 14:23pm, 4 Dec 2015</p>
+            </div>
+        </article>
+    {% endfor %}
 </section>

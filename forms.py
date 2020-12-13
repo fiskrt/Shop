@@ -1,6 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileField, validators, HiddenField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileField, validators, SelectField
 
+
+class CommentForm(FlaskForm):
+    comment = StringField('Write comment here')
+    rating = SelectField(choices = ['1','2','3','4','5'])
+    submit = SubmitField('Post')
 
 class LoginForm(FlaskForm):
     username = StringField('Username')
@@ -8,10 +13,11 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Log In')
 
 class BasketForm(FlaskForm):
-    increment = SubmitField('+')
-    decrement = SubmitField('-')
-    hidden = HiddenField('myhidden')
-    delete = SubmitField('X')
+    #increment = SubmitField('+')
+    #decrement = SubmitField('-')
+    #hidden = HiddenField('myhidden')
+    #delete = SubmitField('X')
+    pass
 
 
 class AdminAddProduct(FlaskForm):
