@@ -143,7 +143,6 @@ def register():
         return render_template("register.html", form=form)
 
 
-
 @app.route("/adminpage", methods=["GET", "POST"])
 def admin():
     if not is_logged_in(check_admin=True):
