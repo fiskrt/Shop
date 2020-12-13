@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, make_response
-from forms import LoginForm, AdminAddProduct,RegisterForm, BasketForm
+from forms import LoginForm, AdminAddProduct, RegisterForm, BasketForm, CommentForm
 from product import Product
 from db_conn import Conn_db
 import database as db
@@ -62,12 +62,26 @@ def about():
     return "Our incredible site!"
 
 
-@app.route("/product/<productId>")
+@app.route("/product/<productId>", methods=['GET', 'POST'])
 def product(productId):
-    product=db.get_product_by_id(productId)
+    form = CommentForm()
+    product = db.get_product_by_id(productId)
     reviews = db.get_reviews(productId)
-    print(reviews)
-    return render_template('product.html', product=product,reviews=reviews)
+    logged_in = is_logged_in()
+    if form.validate_on_submit():
+        print("im in")
+        comment = form.comment.data
+        rating = int(form.rating.data)
+        user = session['username']
+        print(db.add_review(user,rating,comment,productId))
+        reviews = db.get_reviews(productId)
+        print(reviews)
+        print("härnu")
+        return render_template('product.html', product=product,reviews=reviews, form=form,logged_in=logged_in)
+    return render_template('product.html', product=product,reviews=reviews,form=form,logged_in=logged_in)
+    user = session['username']
+
+
 
 
 @app.route("/basket")

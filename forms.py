@@ -1,6 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileField, validators
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileField, validators, SelectField
 
+class CommentForm(FlaskForm):
+    comment = StringField('Write comment here')
+    rating = SelectField(choices = ['1','2','3','4','5'])
+    submit = SubmitField('Post')
 
 class LoginForm(FlaskForm):
     username = StringField('Username')
