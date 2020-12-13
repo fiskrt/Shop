@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'DEV'
 
 
-def is_logged_in(check_admin=False):
+def is_logged_in(check_admin=False, only_user=False):
     """
         If username start with a '#' then its
         an admin account.
@@ -19,8 +19,10 @@ def is_logged_in(check_admin=False):
         username = session['username']
     except:
         return False
-    check_admin = check_admin or username[0] == '#'
-    if username[0] == '#':
+    check_admin = check_admin or username[0] == '#' 
+    if only_user:
+        check_admin = False
+    elif username[0] == '#':
         username = username[1:]
     return db.user_exists(username, check_admin)
 
@@ -70,18 +72,25 @@ def product(productId):
     return render_template('product.html', product=product,reviews=reviews)
 
 
-@app.route("/basket")
+@app.route("/basket", methods=['GET', 'POST'])
 def basket():
-    if not is_logged_in():
+    if not is_logged_in(only_user=True):
         return redirect(url_for('home'))
-
+    
+    if request.method == "POST":
+        try:
+            quantity = int(request.form['quantity'])
+            prod_id = int(request.form['idProduct'])
+        except:
+            print("Malformed input")
+        else:
+            db.set_basket_item_quantity(session['username'], prod_id, quantity)
+        
     products = db.get_basket_products(session['username'])
     for p in products:
         p['rating'] = int(db.get_star_rating(p['idProduct']))
 
-    form = BasketForm()
-    print(products)
-    return render_template('basket.html', products=products, form=form)
+    return render_template('basket.html', products=products, logged_in=True)
 
 
 @app.route("/logout")

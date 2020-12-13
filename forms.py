@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileField, validators
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileField, validators, HiddenField
 
 
 class LoginForm(FlaskForm):
@@ -10,6 +10,7 @@ class LoginForm(FlaskForm):
 class BasketForm(FlaskForm):
     increment = SubmitField('+')
     decrement = SubmitField('-')
+    hidden = HiddenField('myhidden')
     delete = SubmitField('X')
 
 

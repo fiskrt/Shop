@@ -135,6 +135,23 @@ def add_to_basket(user, quantity, product_id):
         cursor.close()
 
 
+def set_basket_item_quantity(user, prod_id, quantity):
+    """
+        TODO: What if prod_id does not exist?
+    """
+    if quantity == 0:
+        return remove_from_basket(user, prod_id)
+    user_id = user_to_id(user)
+    with Conn_db() as conn:
+        query = ('UPDATE Basket_Entry '
+                'SET quantity=%s '
+                'WHERE idUser=%s AND idProduct=%s;')
+        cursor = conn.cursor()
+        cursor.execute(query, (quantity, user_id, prod_id))
+        conn.commit()
+        cursor.close()
+
+
 def remove_from_basket(user, prod_id):
     user_id = user_to_id(user)
     with Conn_db() as conn:
