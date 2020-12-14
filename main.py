@@ -36,13 +36,10 @@ def is_logged_in(check_admin=False, only_user=False):
 
 
 @app.route("/", methods=["GET", "POST"])
-def home():
+@app.route("/<search>", methods=["GET", "POST"])
+def home(search=None):
     form = LoginForm()
-    products = db.get_products()
-    for p in products:
-        p["rating"] = int(db.get_star_rating(p["idProduct"]))
-
-    products = db.get_products()
+    products = db.get_products(search)
     for p in products:
         p["rating"] = int(db.get_star_rating(p["idProduct"]))
 

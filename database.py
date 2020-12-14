@@ -44,8 +44,8 @@ def get_products(prod_name=None):
     with Conn_db() as conn:
         cursor = conn.cursor(dictionary=True)
         if prod_name:
-            query = "SELECT * FROM Product WHERE name=%s;"
-            cursor.execute(query, (prod_name,))
+            query = "SELECT * FROM Product WHERE LOWER(name) LIKE %s;"
+            cursor.execute(query, ('%' + prod_name + '%',))
         else:
             query = "SELECT * FROM Product;"
             cursor.execute(query)
