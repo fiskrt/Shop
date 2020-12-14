@@ -2,40 +2,21 @@
 
 E-com website with simple database
 
+## Architecture ##
+We use the **three tier architecture** which includes three tiers:
+- client
+- application
+- and database.
 
-## How to use git
-
-**Commonly used commands:**
-  * git status -v
-  * git push -u origin [branch]
-  * git checkout [branch]
-  * git commit -m "message"
-  * git add .
-  * git merge [other branch]
-
-
-### When you have modified your branch and want to push to *main*
-
-First add and commit your code to *your* branch:
-
-`git add .`
-
-`git commit -m "message"`
-
-Then you move to the main branch by:
-
-`git checkout main`
-
-then merge our branch into main:
-
-`git merge [personal dev branch]`
-
-finally, push it to main:
-
-`git push -u origin main`
+This is similar to the classic client-server architecture such that a client with a web browser interacts with our server through the HTTP protocol. The incoming requests and client serving is handled by a web framework. The framework also handles the logic and can in turn communicate with a database using the SQL protocol. 
 
 
 
-
-
-
+## Limitations and improvements ##
+- Design patterns
+- Pagination
+- Complement login system using cookies with database.
+- Logging can be improved by a lot.
+- Error handling
+- Security (session handling, hashing passwords)
+- See github issues in our repo for more improvements
