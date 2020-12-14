@@ -12,14 +12,6 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password')
     submit = SubmitField('Log In')
 
-class BasketForm(FlaskForm):
-    #increment = SubmitField('+')
-    #decrement = SubmitField('-')
-    #hidden = HiddenField('myhidden')
-    #delete = SubmitField('X')
-    pass
-
-
 class AdminAddProduct(FlaskForm):
     name = StringField('Name')
     price = IntegerField('Price')
@@ -30,7 +22,6 @@ class AdminAddProduct(FlaskForm):
 
 class RegisterForm(FlaskForm):
     name = StringField('Name', [validators.Length(min=1, max = 20)])
-    email = StringField('Email', [validators.Length(min=4, max=20)])
     password = PasswordField('Password', [
         validators.DataRequired(),
         validators.EqualTo('confirm', "Message do not match")

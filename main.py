@@ -7,7 +7,7 @@ from flask import (
     session,
     make_response,
 )
-from forms import LoginForm, AdminAddProduct, RegisterForm, BasketForm, CommentForm
+from forms import LoginForm, AdminAddProduct, RegisterForm, CommentForm
 from product import Product
 from db_conn import Conn_db
 import database as db
