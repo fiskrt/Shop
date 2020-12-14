@@ -3,6 +3,21 @@
 {% block custom_head %}
 <link rel="stylesheet" href="../static/productpage.css"></link>
 <link rel="stylesheet" href="../static/review.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("button.btn_add").click(function () {
+            console.log(this)
+            $.post(window.location.href,
+                {
+
+                },
+                function (data, status) {
+                });
+            console.log('added');
+        });
+    });
+    </script>
 {% endblock custom_head %}
 
 {% block content %}
@@ -11,10 +26,12 @@
         <img class="productImage" id="productImage" src="..\{{ product['image_path'] }}" alt="">
     </div>
     <div class="productInfo">
-        <h2> {{ product['name'] }} | {{ product['price'] }} kr </h2>
+        <h2> {{ product['name'] }} </h2>
+        <h4> {{ product['price']|string+"$" }} </h4>
         <p class="productDescription">
-            {{ product['description'] }}</p>
+            {{ product['description'] }} </p>
     </div>
+<button class="btn_add">Add to basket</button>
 </div>
 {%include "reviews.html" %}
 {% endblock content %}

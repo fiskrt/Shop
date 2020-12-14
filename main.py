@@ -80,6 +80,8 @@ def home():
 
 @app.route("/product/<productId>", methods=['GET', 'POST'])
 def product(productId):
+    if request.method == "POST":
+        db.add_to_basket(session["username"],1, productId)
     form = CommentForm()
     product = db.get_product_by_id(productId)
     reviews = db.get_reviews(productId)
