@@ -194,6 +194,10 @@ def checkout(user):
                 'JOIN Basket_Entry BE '
                 'ON BE.idUser=%s AND P.idProduct=BE.idProduct;')
         cursor.execute(q2, (order_id, user_id))
+        if cursor.lastrowid == 0:
+            conn.rollback()
+            cursor.close()
+            return False
 
         q3 = ('DELETE FROM Basket_Entry '
                     'WHERE idUser=%s;')
@@ -201,6 +205,7 @@ def checkout(user):
 
         conn.commit()
         cursor.close()
+    return True
 
 
 def user_exists(username, check_admin=False):

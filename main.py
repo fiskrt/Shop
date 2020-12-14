@@ -78,26 +78,31 @@ def home():
     )
 
 
-@app.route("/product/<productId>", methods=['GET', 'POST'])
+@app.route("/product/<productId>", methods=["GET", "POST"])
 def product(productId):
     if request.method == "POST":
-        db.add_to_basket(session["username"],1, productId)
+        if "add_basket" in request.form:
+            if request.form["add_basket"]:
+                db.add_to_basket(session["username"], 1, productId)
     form = CommentForm()
     product = db.get_product_by_id(productId)
     reviews = db.get_reviews(productId)
     logged_in = is_logged_in()
     if form.validate_on_submit():
-        print("im in")
         comment = form.comment.data
         rating = int(form.rating.data)
-        user = session['username']
-        print(db.add_review(user,rating,comment,productId))
+        db.add_review(session["username"], rating, comment, productId)
         reviews = db.get_reviews(productId)
-        print(reviews)
-        print("härnu")
-        return render_template('product.html', product=product,reviews=reviews, form=form,logged_in=logged_in)
-    return render_template('product.html', product=product,reviews=reviews,form=form,logged_in=logged_in)
-    user = session['username']
+        return render_template(
+            "product.html",
+            product=product,
+            reviews=reviews,
+            form=form,
+            logged_in=logged_in,
+        )
+    return render_template(
+        "product.html", product=product, reviews=reviews, form=form, logged_in=logged_in
+    )
 
 
 @app.route("/basket", methods=["GET", "POST"])
@@ -118,7 +123,18 @@ def basket():
     for p in products:
         p["rating"] = int(db.get_star_rating(p["idProduct"]))
 
-    return render_template("basket.html", products=products, logged_in=True)
+    return render_template(
+        "basket.html", products=products, basket=True, logged_in=True
+    )
+
+@app.route("/checkout")
+def checkout():
+    if not is_logged_in(only_user=True):
+        return redirect(url_for("home"))
+    if db.checkout(session['username']):
+        return "tyvm for your purchase."
+    else:
+        return "You didnt have anything in you basket??"
 
 
 @app.route("/logout")
