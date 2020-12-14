@@ -156,7 +156,6 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         name = form.name.data
-        email = form.email.data
         password = form.password.data
         if db.add_user_db(name, password):
             # session['username'] = name # Log in user auto...

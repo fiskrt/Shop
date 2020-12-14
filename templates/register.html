@@ -1,34 +1,32 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Register gang
+Register gang
 {% endblock title %}
 
 {% block custom_head %}
-    <link rel="stylesheet" href="../static/registercenter.css"></link>
+<link rel="stylesheet" href="../static/registercenter.css">
+</link>
 {% endblock custom_head %}
 
 
 {% block content %}
-  <div class="RegisterForm" id="RegisterForm">
-   <form method="post" action="" class="form-container">
+<div class="RegisterForm" id="RegisterForm">
+    <form method="post" action="" class="form-container">
 
-       {{ form.hidden_tag() }}
+        {{ form.hidden_tag() }}
 
-       {{ form.name.label}}
-	{{ form.name(placeholder="Name")}}
+        {{ form.name.label}}
+        {{ form.name(placeholder="Name")}}
 
-	{{ form.email.label}}
-	{{ form.email(placeholder="Email")}}
+        {{ form.password.label}}
+        {{ form.password(placeholder="Password")}}
 
-       	{{ form.password.label}}
-	{{ form.password(placeholder="Password")}}
+        {{ form.confirm.label}}
+        {{ form.confirm(placeholder="Confirmed Password")}}
 
-    {{ form.confirm.label}}
-	{{ form.confirm(placeholder="Confirmed Password")}}
+        {{ form.register(class="btn") }}
 
-       {{ form.register(class="btn") }}
-
-   </form>
- </div>
+    </form>
+</div>
 {% endblock content %}
