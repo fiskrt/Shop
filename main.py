@@ -77,14 +77,14 @@ def home(search=None):
 
 @app.route("/product/<productId>", methods=["GET", "POST"])
 def product(productId):
-    if request.method == "POST":
+    logged_in = is_logged_in()
+    if logged_in and request.method == "POST":
         if "add_basket" in request.form:
             if request.form["add_basket"]:
                 db.add_to_basket(session["username"], 1, productId)
     form = CommentForm()
     product = db.get_product_by_id(productId)
     reviews = db.get_reviews(productId)
-    logged_in = is_logged_in()
     if form.validate_on_submit():
         comment = form.comment.data
         rating = int(form.rating.data)

@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block custom_head %}
-<link rel="stylesheet" href="../static/productpage.css"></link>
+<link rel="stylesheet" href="../static/productpage.css">
+</link>
 <link rel="stylesheet" href="../static/review.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
         $("button.btn_add").click(function () {
@@ -17,7 +18,7 @@
             console.log('added');
         });
     });
-    </script>
+</script>
 {% endblock custom_head %}
 
 {% block content %}
@@ -27,11 +28,13 @@
     </div>
     <div class="productInfo">
         <h2> {{ product['name'] }} </h2>
-        <h4> {{ product['price']|string+"$" }} </h4>
+        <h4> {{ product['price'] }} kr </h4>
         <p class="productDescription">
             {{ product['description'] }} </p>
     </div>
-<button class="btn_add">Add to basket</button>
+    {% if logged_in %}
+    <button class="btn_add">Add to basket</button>
+    {% endif %}
 </div>
 {%include "reviews.html" %}
 {% endblock content %}
