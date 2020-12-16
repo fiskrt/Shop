@@ -77,7 +77,7 @@ def home(search=None):
 
 @app.route("/product/<productId>", methods=["GET", "POST"])
 def product(productId):
-    logged_in = is_logged_in()
+    logged_in = is_logged_in(only_user=True)
     if logged_in and request.method == "POST":
         if "add_basket" in request.form:
             if request.form["add_basket"]:
@@ -85,7 +85,7 @@ def product(productId):
     form = CommentForm()
     product = db.get_product_by_id(productId)
     reviews = db.get_reviews(productId)
-    if form.validate_on_submit():
+    if form.validate_on_submit() and logged_in:
         comment = form.comment.data
         rating = int(form.rating.data)
         db.add_review(session["username"], rating, comment, productId)
@@ -95,7 +95,7 @@ def product(productId):
             product=product,
             reviews=reviews,
             form=form,
-            logged_in=logged_in,
+            logged_in=True,
         )
     return render_template(
         "product.html", product=product, reviews=reviews, form=form, logged_in=logged_in
