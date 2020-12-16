@@ -3,21 +3,21 @@ from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileF
 
 
 class CommentForm(FlaskForm):
-    comment = StringField('Write comment here')
+    comment = StringField('Write comment here', [validators.DataRequired()])
     rating = SelectField(choices = ['1','2','3','4','5'])
     submit = SubmitField('Post')
 
 class LoginForm(FlaskForm):
-    username = StringField('Username')
-    password = PasswordField('Password')
+    username = StringField('Username', [validators.DataRequired(), validators.Length(min=1, max = 21)])
+    password = PasswordField('Password', [validators.DataRequired()])
     submit = SubmitField('Log In')
 
 class AdminAddProduct(FlaskForm):
-    name = StringField('Name')
-    price = IntegerField('Price')
-    description = StringField('Description')
-    image = FileField('Image')
-    brand = StringField('Brand')
+    name = StringField('Name', [validators.DataRequired()])
+    price = IntegerField('Price', [validators.DataRequired()])
+    description = StringField('Description', [validators.DataRequired()])
+    image = FileField('Image', [validators.DataRequired()])
+    brand = StringField('Brand', [validators.DataRequired()])
     submit = SubmitField('Add product')
 
 class RegisterForm(FlaskForm):
