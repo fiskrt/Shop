@@ -18,10 +18,11 @@ def add_review(username, rating, comment, prod_id):
         try:
             cursor.execute(query, (user_to_id(username), rating, comment, prod_id))
         except Error as e:
-            return False
-        finally:
-            conn.commit()
+            conn.rollback()
             cursor.close()
+            return False
+        conn.commit()
+        cursor.close()
     return True
 
 
@@ -113,7 +114,6 @@ def get_basket_products(user):
         cursor = conn.cursor(dictionary=True)
         cursor.execute(query, (user_id,))
         products = cursor.fetchall()
-        conn.commit()
         cursor.close()
     return products
 
@@ -137,7 +137,9 @@ def add_to_basket(user, quantity, product_id):
 
 def set_basket_item_quantity(user, prod_id, quantity):
     """
-        TODO: What if prod_id does not exist?
+        Set quantity for a product in a users basket.
+        Returns False if operation failed, for example
+        due to invalid product ID or user ID.
     """
     if quantity == 0:
         return remove_from_basket(user, prod_id)
@@ -147,20 +149,36 @@ def set_basket_item_quantity(user, prod_id, quantity):
                 'SET quantity=%s '
                 'WHERE idUser=%s AND idProduct=%s;')
         cursor = conn.cursor()
-        cursor.execute(query, (quantity, user_id, prod_id))
+        try:
+            cursor.execute(query, (quantity, user_id, prod_id))
+        except Error as e:
+            conn.rollback()
+            cursor.close()
+            return False
         conn.commit()
         cursor.close()
+    return True
 
 
 def remove_from_basket(user, prod_id):
+    """
+        Remove a product from a users basket.
+        Returns False on failure.
+    """
     user_id = user_to_id(user)
     with Conn_db() as conn:
         query = ('DELETE FROM Basket_Entry '
                 'WHERE idUser=%s AND idProduct=%s;')
         cursor = conn.cursor()
-        cursor.execute(query, (user_id, prod_id))
+        try:
+            cursor.execute(query, (user_id, prod_id))
+        except Error as e:
+            conn.rollback()
+            cursor.close()
+            return False
         conn.commit()
         cursor.close()
+    return True
 
 
 def checkout(user):
@@ -180,31 +198,33 @@ def checkout(user):
     user_id = user_to_id(user)
     current_date = datetime.datetime.now().strftime('%Y-%m-%d')
     with Conn_db() as conn:
-        cursor = conn.cursor()
         q1 = ('INSERT INTO User_has_Order'
                 '(idUser, order_date)'
                 'VALUES(%s, %s);')
-        cursor.execute(q1, (user_id, current_date))
-        order_id = cursor.lastrowid
-
         q2 = ('INSERT INTO Order_Entry '
                 '(idOrder, quantity, sold_prod_name, sold_prod_price) '
                 'SELECT %s, BE.quantity, P.name, P.price '
                 'FROM Product P '
                 'JOIN Basket_Entry BE '
                 'ON BE.idUser=%s AND P.idProduct=BE.idProduct;')
-        cursor.execute(q2, (order_id, user_id))
-        if cursor.lastrowid == 0:
-            conn.rollback()
-            cursor.close()
-            return False
-
         q3 = ('DELETE FROM Basket_Entry '
                     'WHERE idUser=%s;')
-        cursor.execute(q3, (user_id, ))
+        cursor = conn.cursor()
+        try:
+            cursor.execute(q1, (user_id, current_date))
+            # Get orderid from junction table
+            order_id = cursor.lastrowid
 
-        conn.commit()
-        cursor.close()
+            cursor.execute(q2, (order_id, user_id))
+            if cursor.lastrowid == 0:
+                raise Error(msg="No products in basket")
+            cursor.execute(q3, (user_id, ))
+            conn.commit()
+        except Error as e:
+            conn.rollback()
+            return False
+        finally:
+            cursor.close()
     return True
 
 
@@ -230,13 +250,12 @@ def add_user_db(username, password):
         If user already exists return False.
     """
     with Conn_db() as conn:
-        conn.autocommit = False
         cursor = conn.cursor()
         lookup_query = 'SELECT username FROM User where username=%s'
         cursor.execute(lookup_query, (username,))
 
         if cursor.fetchone():
-            conn.rollback() # Rollback a lookup xD
+            conn.rollback()
             cursor.close()
             return False # User already exists.
 
