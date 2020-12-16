@@ -199,7 +199,7 @@ def checkout(user):
     current_date = datetime.datetime.now().strftime('%Y-%m-%d')
     with Conn_db() as conn:
         q1 = ('INSERT INTO User_has_Order'
-                '(idUser, order_date)'
+                '(idUser, order_date) '
                 'VALUES(%s, %s);')
         q2 = ('INSERT INTO Order_Entry '
                 '(idOrder, quantity, sold_prod_name, sold_prod_price) '
