@@ -131,7 +131,7 @@ def checkout():
     if db.checkout(session['username']):
         return "tyvm for your purchase."
     else:
-        return "You didnt have anything in you basket??"
+        return "Checkout <b>not</b> completed."
 
 
 @app.route("/logout")

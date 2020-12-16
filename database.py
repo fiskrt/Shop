@@ -211,6 +211,15 @@ def checkout(user):
                     'WHERE idUser=%s;')
         cursor = conn.cursor()
         try:
+            q_0 = ('SELECT idProduct, quantity FROM Basket_Entry '
+                    'WHERE idUser=%s;')  
+            cursor.execute(q_0, (user_id,))
+            prods = cursor.fetchall()
+            q_1 = ('UPDATE Product SET stock=stock-%s '
+                    'WHERE idProduct=%s;')
+            for pid, qnty in prods:
+                cursor.execute(q_1, (qnty, pid))
+
             cursor.execute(q1, (user_id, current_date))
             # Get orderid from junction table
             order_id = cursor.lastrowid
@@ -221,6 +230,7 @@ def checkout(user):
             cursor.execute(q3, (user_id, ))
             conn.commit()
         except Error as e:
+            print(e)
             conn.rollback()
             return False
         finally:
@@ -284,16 +294,16 @@ def log_in(username, password, as_admin=False):
     return False
 
 
-def add_product(name, price, description, brand, path):
+def add_product(name, price, description, brand, path, stock=5):
     """
         Adds a product and returns the product id.
     """
     with Conn_db() as conn:
         cursor = conn.cursor()
         query = ('INSERT INTO Product '
-                '(name, price, description, brand) '
-                'VALUES(%s,%s,%s,%s);')
-        cursor.execute(query, (name, price, description, brand))
+                '(name, price, description, brand, stock) '
+                'VALUES(%s,%s,%s,%s, %s);')
+        cursor.execute(query, (name, price, description, brand, stock))
         prod_id = cursor.lastrowid
         path += str(prod_id) + '.jpg'
         q2 = 'UPDATE Product SET image_path=%s WHERE idProduct=%s'
